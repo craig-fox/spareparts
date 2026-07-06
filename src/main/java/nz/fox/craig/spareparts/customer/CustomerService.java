@@ -1,5 +1,6 @@
 package nz.fox.craig.spareparts.customer;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import nz.fox.craig.spareparts.customer.dto.CustomerRequest;
 import nz.fox.craig.spareparts.customer.dto.CustomerResponse;
@@ -20,6 +21,13 @@ public class CustomerService {
 				.address(request.address())
 				.build();
 		return CustomerResponse.from(customerRepository.save(customer));
+	}
+
+	@Transactional(readOnly = true)
+	public List<CustomerResponse> getAllCustomers() {
+		return customerRepository.findAll().stream()
+				.map(CustomerResponse::from)
+				.toList();
 	}
 
 	@Transactional(readOnly = true)

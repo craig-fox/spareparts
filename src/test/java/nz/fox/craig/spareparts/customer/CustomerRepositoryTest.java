@@ -34,6 +34,22 @@ class CustomerRepositoryTest {
 	}
 
 	@Test
+	void findAllCustomers() {
+		customerRepository.save(Customer.builder()
+				.name("Jane Doe")
+				.email("jane@example.com")
+				.address("123 Main St")
+				.build());
+		customerRepository.save(Customer.builder()
+				.name("John Doe")
+				.email("john@example.com")
+				.address("456 Oak Ave")
+				.build());
+
+		assertThat(customerRepository.findAll()).hasSize(2);
+	}
+
+	@Test
 	void updateExistingCustomer() {
 		Customer customer = customerRepository.save(Customer.builder()
 				.name("Jane Doe")

@@ -1,6 +1,7 @@
 package nz.fox.craig.spareparts.customer;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import nz.fox.craig.spareparts.customer.dto.CustomerRequest;
 import nz.fox.craig.spareparts.customer.dto.CustomerResponse;
@@ -25,6 +26,11 @@ public class CustomerController {
 	public ResponseEntity<CustomerResponse> createCustomer(@Valid @RequestBody CustomerRequest request) {
 		CustomerResponse response = customerService.createCustomer(request);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	}
+
+	@GetMapping
+	public List<CustomerResponse> getAllCustomers() {
+		return customerService.getAllCustomers();
 	}
 
 	@GetMapping("/{id}")
