@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 import nz.fox.craig.spareparts.customer.dto.CustomerRequest;
 import nz.fox.craig.spareparts.customer.dto.CustomerResponse;
@@ -43,6 +44,30 @@ class CustomerServiceTest {
 		assertThat(response.email()).isEqualTo("jane@example.com");
 		assertThat(response.address()).isEqualTo("123 Main St");
 		verify(customerRepository).save(any(Customer.class));
+	}
+
+	@Test
+	void getAllCustomers() {
+		Customer customer1 = Customer.builder()
+				.id(1L)
+				.name("Jane Doe")
+				.email("jane@example.com")
+				.address("123 Main St")
+				.build();
+		Customer customer2 = Customer.builder()
+				.id(2L)
+				.name("John Doe")
+				.email("john@example.com")
+				.address("456 Oak Ave")
+				.build();
+
+		when(customerRepository.findAll()).thenReturn(List.of(customer1, customer2));
+
+		List<CustomerResponse> responses = customerService.getAllCustomers();
+
+		assertThat(responses).hasSize(2);
+		assertThat(responses.get(0).name()).isEqualTo("Jane Doe");
+		assertThat(responses.get(1).name()).isEqualTo("John Doe");
 	}
 
 	@Test

@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
 import nz.fox.craig.spareparts.customer.dto.CustomerRequest;
 import nz.fox.craig.spareparts.customer.dto.CustomerResponse;
 import org.junit.jupiter.api.Test;
@@ -65,6 +66,22 @@ class CustomerControllerTest {
 						.contentType(MediaType.APPLICATION_JSON)
 						.content("{}"))
 				.andExpect(status().isBadRequest());
+	}
+
+	@Test
+	void getAllCustomers() throws Exception {
+		List<CustomerResponse> responses = List.of(
+				new CustomerResponse(1L, "Jane Doe", "jane@example.com", "123 Main St"),
+				new CustomerResponse(2L, "John Doe", "john@example.com", "456 Oak Ave")
+		);
+
+		when(customerService.getAllCustomers()).thenReturn(responses);
+
+		mockMvc.perform(get("/api/customers"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.length()").value(2))
+				.andExpect(jsonPath("$[0].name").value("Jane Doe"))
+				.andExpect(jsonPath("$[1].name").value("John Doe"));
 	}
 
 	@Test
